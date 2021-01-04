@@ -1,0 +1,32 @@
+# Config parameters
+general:
+  base_output_paht: /your/output/path
+
+endpoints:
+  scihub:
+    api_url: endpoint_url
+    uname: username
+    pw: password
+
+platforms:
+  sentinel-1:
+    aois:
+        mainland: footprints/s1_mainland.geojson
+        arctic: footprints/s1_arctic.geojson
+
+    kwargs:
+        RAW:
+          platformname: Sentinel-1
+          producttype: RAW
+        SLC_sm:
+          platformname: Sentinel-1
+          producttype: SLC
+          sensoroperationalmode: SM
+        SLC_iw:
+          platformname: Sentinel-1
+          producttype: SLC
+          sensoroperationalmode: IW
+        SLC_ew:
+          platformname: Sentinel-1
+          producttype: SLC
+          sensoroperationalmode: EW
