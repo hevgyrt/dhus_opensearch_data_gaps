@@ -9,7 +9,7 @@ import numpy as np
 import multiprocessing as mp
 import os
 import logging
-from query_opensearch import RetriveAndWriteOpensearch
+from src.query_opensearch import RetriveAndWriteOpensearch
 logging.basicConfig(filename='logfile.log', level=logging.DEBUG)
 
 def retrieve_and_write(uname, pw, api_url,footprint,date_value,kwarg,timeout,fname,fpath):
