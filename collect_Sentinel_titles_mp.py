@@ -1,6 +1,6 @@
 """
-Script for comparing content in various DHUS endpoints for Copernicus Sentinel
-data.
+Script for harvesting content from various DHUS endpoints for Copernicus
+Sentinel data, storing the data in text files.
 """
 
 import yaml
@@ -13,6 +13,9 @@ from query_opensearch import RetriveAndWriteOpensearch
 logging.basicConfig(filename='logfile.log', level=logging.DEBUG)
 
 def retrieve_and_write(uname, pw, api_url,footprint,date_value,kwarg,timeout,fname,fpath):
+    """ Calls the RetriveAndWriteOpensearch method and write output, if any, to
+    text file.
+    """
     #print('parent process:', os.getppid())
     #print('process id:', os.getpid())
     test = RetriveAndWriteOpensearch(uname,
@@ -25,7 +28,6 @@ def retrieve_and_write(uname, pw, api_url,footprint,date_value,kwarg,timeout,fna
                                      )
     if test.products_count>0:
         test.write_title(fname,fpath)
-    #return True
 
 def main():
 
