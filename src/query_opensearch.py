@@ -16,7 +16,7 @@ class RetriveAndWriteOpensearch:
         self.query_kwargs = query_kwargs
         self.timeout = timeout
 
-        self.products_df = self.main()
+        self.api, self.products_df = self.main()
         self.products_count = self.products_df.shape[0]
 
     def main(self):
@@ -38,7 +38,7 @@ class RetriveAndWriteOpensearch:
 
         products = api.query(area=fp, date=self.dates,
                              **self.query_kwargs)
-        return api.to_dataframe(products)
+        return api,api.to_dataframe(products)
 
     def write_title(self, filename, fpath=None):
         """ Write product title to file
@@ -66,10 +66,29 @@ class RetriveAndWriteOpensearch:
 
         return os.path.isfile(output)
 
+    def verify_output(self):
+        """ Verify that number of files written to file is equal to
+        number of files available in the API
+
+        Args:
+            self
+        Returns:
+            [bool]: [return True if the number is equal and false if not]
+        """
+        fp = geojson_to_wkt(read_geojson(self.footprint))
+        api_count = self.api.count(area=fp, date=self.dates,
+                             **self.query_kwargs)
+        print("Nb products retrieved: {}".format(self.products_count))
+        print("Nb products available: {}".format(api_count))
+        if api_count==self.products_count:
+            return True
+        else:
+            return False
+
 
 if __name__=='__main__':
     # read config data
-    with open('input_params.yaml') as input_params:
+    with open('../input_params.yaml') as input_params:
         try:
             input_p=yaml.safe_load(input_params)
         except yaml.YAMLError as exc:
@@ -92,7 +111,7 @@ if __name__=='__main__':
     pw = input_p['endpoints']['colhub']['pw']
 
     date_key, date_value = "201803",("20180301","20180304")
-    footprint = input_p['platforms']['sentinel-1']['aois']['mainland']
+    footprint = '../'+input_p['platforms']['sentinel-1']['aois']['mainland']
     kwarg = input_p['platforms']['sentinel-1']['kwargs']['SLC_iw']
 
     fpath = '/'.join((os.getcwd(),"output"))
@@ -111,3 +130,6 @@ if __name__=='__main__':
         print("Number of products: {}".format(test.products_count))
         writing_works = test.write_title(fname,fpath)
         print("Writing works: ",writing_works)
+    test_counting = test.verify_output()
+    if test_counting:
+        print("Nb products verification works")
